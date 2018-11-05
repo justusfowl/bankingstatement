@@ -1,6 +1,7 @@
 import sys
 import argparse
 import logging
+from logging.handlers import RotatingFileHandler
 import sys
 import os
 
@@ -16,12 +17,30 @@ load_dotenv(dotenv_path=dotenv_path)
 
 from BalanceStatement import Run
 
+LOG_FILE_NAME = "fin71beapp.log" 
+
 parser = argparse.ArgumentParser(description='kDatacenter Kontoauszug')
 
 parser.add_argument("-u", "--user_ids", nargs='+',
                     help="userIds to be used for withdrawing statements", metavar="STRINGS")
 
-logging.basicConfig(level=logging.INFO)
+
+LOG_FILE_NAME = "fin71beapp.log" 
+
+logger = logging.getLogger()
+handler = logging.StreamHandler()
+
+formatter = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+handler.setFormatter(formatter)
+
+rotate = RotatingFileHandler(LOG_FILE_NAME, maxBytes=25000,backupCount=5)
+rotate.setFormatter(formatter)
+rotate.setLevel(logging.INFO)
+
+logger.addHandler(rotate)
+logger.addHandler(handler)
+
+logger.setLevel(logging.INFO)
 
 def main(args=sys.argv[1:]):
 
@@ -75,11 +94,14 @@ def main(args=sys.argv[1:]):
     user_ids = args.user_ids
 
     for u in user_ids:
-
+        print("User {}".format(u))
         accounts = _get_accounts(u)
-
-        print(u)
 
         for acc in accounts:
             r = Run(mysql_conn_string, mongo_conn_string, acc)
             r.init_processing()
+
+# Files are being run / scheduled by CRON
+# type crontab -e for setup/info
+
+main(sys.argv[1:])
