@@ -84,4 +84,7 @@ def main(args=sys.argv[1:]):
             r = Run(mysql_conn_string, mongo_conn_string, acc)
             r.init_processing()
 
+# Files are being run / scheduled by CRON
+# type crontab -e for setup/info
+
 main(sys.argv[1:])
