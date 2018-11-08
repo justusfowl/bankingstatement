@@ -17,15 +17,13 @@ load_dotenv(dotenv_path=dotenv_path)
 
 from BalanceStatement import Run
 
-LOG_FILE_NAME = "fin71beapp.log" 
-
 parser = argparse.ArgumentParser(description='kDatacenter Kontoauszug')
 
 parser.add_argument("-u", "--user_ids", nargs='+',
                     help="userIds to be used for withdrawing statements", metavar="STRINGS")
 
 
-LOG_FILE_NAME = "fin71beapp.log" 
+LOG_FILE_NAME = "./fin71beapp.log"
 
 logger = logging.getLogger()
 handler = logging.StreamHandler()

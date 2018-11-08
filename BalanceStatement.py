@@ -35,6 +35,16 @@ class Bank(DeclarativeBase):
             self.bankName, self.bankUrl)
 
 
+class User(DeclarativeBase):
+    __tablename__ = 'tblusers'
+    userId = Column(String(100), primary_key=True)
+    userName = Column(String(100))
+    userCreatedAt = Column(Date())
+
+    def __repr__(self):
+        return "<user(userId='%s', userName='%s')>" % (
+            self.userId, self.userName)
+
 class Account(DeclarativeBase):
     __tablename__ = 'tblaccounts'
     accountNumber = Column(String(100), primary_key=True)
