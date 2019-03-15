@@ -70,6 +70,7 @@ class Account_Transaction(DeclarativeBase):
     transactionDate = Column(Date(), primary_key=True)
     transactionEntryDate = Column(Date())
     withdrawDate = Column(Date())
+    localSysBankId = Column(Integer())
     transactionOwnerId = Column(String(100), ForeignKey("tblusers.userId"))
 
     def __repr__(self):
@@ -96,6 +97,8 @@ class Run:
             key,
             args["bankUrl"]
         )
+
+        self.localSysBankId = args["bankId"]
 
         self.accountOwnerId = args["accountOwner"]
 
@@ -232,6 +235,7 @@ class Run:
             "accountBlz": account.blz,
             "iban": account.iban,
             "bic": account.bic,
+		"localSysBankId" : self.localSysBankId,
             "status": data.get("status", None),
             "funds_code": data.get("funds_code", None),
             "amount": data["amount"].amount.to_eng_string(),
@@ -286,7 +290,8 @@ class Run:
             transactionDate=mongo_t_itm["date"],
             transactionEntryDate=mongo_t_itm["entry_date"],
             withdrawDate=mongo_t_itm["withdrawDate"],
-            transactionOwnerId=mongo_t_itm["transactionOwnerId"]
+            transactionOwnerId=mongo_t_itm["transactionOwnerId"],
+            localSysBankId=self.localSysBankId
         )
 
         return mongo_t_itm, sql_acc_trans_item
